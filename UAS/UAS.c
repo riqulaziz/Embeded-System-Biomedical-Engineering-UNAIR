@@ -1,0 +1,85 @@
+/*
+ * UAS.c
+ *
+ * Created: 6/29/2020 2:11:24 PM
+ * Author: Thoriqul Aziz
+ */
+
+#include <io.h>
+#include <stdio.h>
+#include <delay.h>
+#include <stdint.h>
+#define ADC_VREF_TYPE 0x40 // Voltage Ref: AVCC pin
+
+// Fungsi MAP untuk kesebandingan input output
+long map(long x, long in_min, long in_max, long out_min, long out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
+// Fungsi ADC 
+int nilaiADC(uint8_t adctouse)
+{
+    int ADCval;
+    ADMUX = adctouse;         // use #1 ADC
+    ADMUX |= (1 << REFS0);    // use AVcc as the reference
+    ADMUX &= ~(1 << ADLAR);   // clear for 10 bit resolution  
+    ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);    // 128 prescale for 8Mhz
+    ADCSRA |= (1 << ADEN);    // Enable the ADC
+    ADCSRA |= (1 << ADSC);    // Start the ADC conversion
+    while(ADCSRA & (1 << ADSC));      // Thanks T, this line waits for the ADC to finish 
+
+    ADCval = ADCL;
+    ADCval = (ADCH << 8) + ADCval;    // ADCH is read so ADC can be updated again
+    return ADCval;
+}
+
+void main(void)
+{
+int nilai_adc, on; 
+float off;
+// Declare Local variabel 
+PORTC  = 0xFF;     // Awal Naik pada switch
+PINC.2 = 0xff;     // awalan naik pada potensiometri
+DDRC   = 0x00;     // DDR 0 -> Input
+PORTB  = 0x00;     // Inisialisasi Port B       
+DDRB   = 0XFF;     // DDR 1 -> Output
+
+/// ************Inisialisai ADC******* 
+ACSR  = (1<<ACD) | (0<<ACBG) | (0<<ACO) | (0<<ACI) | (0<<ACIE) | (0<<ACIC) | (0<<ACIS1) | (0<<ACIS0);
+DIDR1 = (0<<AIN0D) | (0<<AIN1D);
+DIDR0 = (0<<ADC5D) | (0<<ADC4D) | (0<<ADC3D) | (0<<ADC2D) | (0<<ADC1D) | (0<<ADC0D);
+ADMUX = ADC_VREF_TYPE;
+ADCSRA= (1<<ADEN) | (1<<ADPS0);  // enable ADC
+ADCSRB= (0<<ADTS2) | (0<<ADTS1) | (0<<ADTS0);
+SPCR  = 0x00; // SPI disabled
+TWCR  = 0x00; // TWI disabled
+
+while (1)
+    {
+      while(PINC.0==0 || PINC.1==0)
+      {
+            nilai_adc = nilaiADC(2); // Baca Nilai Potensiometer
+            on = map(nilai_adc, 0, 1023, 0, 100); //Konversi Nilai Analog dengan skala 100
+            off= map(nilai_adc, 0, 1023, 4, 0); //Konverso Nilai Analog dengan skala 4
+            
+            if (PINC.0 == 0)    //aktifkan motor searah jarum jam 
+            {      
+            PORTB=0x01;
+            delay_ms(on);
+            PORTB=0x00; 
+            delay_ms(off);         
+                   
+            }
+            else if (PINC.1 == 0)   //aktifkan motor berlawanan arah jarum jam 
+            {
+
+            PORTB=0x02;
+            delay_ms(on);
+            PORTB=0x00; 
+            delay_ms(off);       
+            } 
+      } 
+
+    }
+}
