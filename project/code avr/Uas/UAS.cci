@@ -1,0 +1,9 @@
+VERSION:3 SOURCE_TIMESTAMP:50E29F35
+NODE:I LEVEL:0 LINE:8 "C:\cvavr\inc\io.h"
+NODE:I LEVEL:0 LINE:9 "C:\cvavr\inc\stdio.h"
+NODE:I LEVEL:0 LINE:10 "C:\cvavr\inc\delay.h"
+NODE:I LEVEL:0 LINE:11 "C:\cvavr\inc\stdint.h"
+NODE:M LEVEL:0 LINE:12 "ADC_VREF_TYPE"
+NODE:F LEVEL:0 LINE:15 "map(long x,long in_min,long in_max,long out_min,long out_max)"
+NODE:F LEVEL:0 LINE:21 "nilaiADC(uint8_t adctouse)"
+NODE:F LEVEL:0 LINE:37 "main(void)"

@@ -1,0 +1,11 @@
+VERSION:3 SOURCE_TIMESTAMP:50A71DD6
+NODE:I LEVEL:0 LINE:8 "C:\cvavr\inc\io.h"
+NODE:I LEVEL:0 LINE:9 "C:\cvavr\inc\alcd.h"
+NODE:I LEVEL:0 LINE:10 "C:\cvavr\inc\stdlib.h"
+NODE:V LEVEL:0 LINE:12 "lup -> R4"
+NODE:V LEVEL:0 LINE:13 "temp -> RAM:????"
+NODE:V LEVEL:0 LINE:14 "temp1 -> RAM:????"
+NODE:V LEVEL:0 LINE:15 "waktu -> R5,R6"
+NODE:V LEVEL:0 LINE:15 "data -> R7,R8"
+NODE:F LEVEL:0 LINE:31 "timer0_int0_isr(void)"
+NODE:F LEVEL:0 LINE:37 "main(void)"
